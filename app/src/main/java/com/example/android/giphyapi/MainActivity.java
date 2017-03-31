@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -102,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         RefreshDAO.getGif(searchString ,new GiphyCallback() {
             @Override
             public void success(ArrayList<String> gifs) {
-                Log.i("CHRIS", "success: " + "Searching for gifs");
                 viewPagerAdapter viewPagerAdapter = new viewPagerAdapter(getSupportFragmentManager(),gifs);
                 viewPager.setAdapter(viewPagerAdapter);
                 viewPagerAdapter.notifyDataSetChanged();
