@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity  {
     private EditText search;
 
     private BottomNavigationView bottomNavigationView;
-
     private GiphySearch RefreshDAO = new GiphySearch();
 
     SharedPreferences prefs;
