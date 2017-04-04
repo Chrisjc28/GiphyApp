@@ -4,9 +4,9 @@
 
     <item
         android:id="@+id/about"
-        android:title="About"
-        android:showAsAction="always"
-        app:showAsAction="always">
+        android:title="@string/about"
+        android:showAsAction="never"
+        app:showAsAction="ifRoom">
     </item>
 
 </menu>
