@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 viewPager.setAdapter(viewPagerAdapter);
                 viewPagerAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
+
             }
             @Override
             public void failure(String failed) {
@@ -119,17 +120,29 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         editor.apply();
     }
 
-    public class viewPagerAdapter extends FragmentPagerAdapter {
+    public class viewPagerAdapter extends FragmentStatePagerAdapter {
         ArrayList<String> gifs;
 
         public viewPagerAdapter(FragmentManager fm, ArrayList<String> gifs) {
             super(fm);
             this.gifs = gifs;
+//            for (int i = 0; i <= gifs.size(); i++) {
+//                gifs.remove(gifs.get(i));
+//            }
+//            gifs = new ArrayList<>(gifs);
+//            notifyDataSetChanged();
+//            fm.beginTransaction().commit();
         }
 
         @Override
         public Fragment getItem(int position) {
            return GiphyFragment.newInstance(gifs.get(position));
+        }
+
+        @Override
+        public int getItemPosition( Object object ) {
+            return POSITION_NONE;
+
         }
 
         @Override
