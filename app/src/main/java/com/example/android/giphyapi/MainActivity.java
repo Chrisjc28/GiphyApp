@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -28,8 +27,6 @@ public class MainActivity extends AppCompatActivity  {
 
     private static final String PREF_KEY = "search_key";
 
-    SwipeRefreshLayout swipeRefreshLayout;
-
     private EditText search;
 
     private GiphySearch RefreshDAO = new GiphySearch();
@@ -37,7 +34,6 @@ public class MainActivity extends AppCompatActivity  {
     SharedPreferences prefs;
 
     ViewPager viewPager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +43,8 @@ public class MainActivity extends AppCompatActivity  {
         prefs = MainActivity.this.getPreferences(Context.MODE_APPEND);
 
         Toolbar giphy_options_toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        giphy_options_toolbar.setBackgroundColor(getColor(R.color.toolbarBackground));
+        giphy_options_toolbar.setTitleTextColor(getColor(R.color.white));
         setSupportActionBar(giphy_options_toolbar);
         getSupportActionBar();
 
