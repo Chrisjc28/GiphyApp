@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity  {
         prefs = MainActivity.this.getPreferences(Context.MODE_APPEND);
 
         Toolbar giphy_options_toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        giphy_options_toolbar.setBackgroundColor(getColor(R.color.toolbarBackground));
         giphy_options_toolbar.setTitleTextColor(getColor(R.color.white));
         setSupportActionBar(giphy_options_toolbar);
         getSupportActionBar();
@@ -91,6 +90,7 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void success(ArrayList<String> gifs) {
                 viewPagerAdapter viewPagerAdapter = new viewPagerAdapter(getSupportFragmentManager(),gifs);
+                viewPager.setOffscreenPageLimit(2);
                 viewPager.setAdapter(viewPagerAdapter);
                 viewPagerAdapter.notifyDataSetChanged();
             }
@@ -131,6 +131,10 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }
 
 

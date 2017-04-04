@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ShareCompat;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +24,12 @@ import java.io.IOException;
 import pl.droidsonroids.gif.GifDrawableBuilder;
 
 
+
 public class GiphyFragment extends Fragment {
     private static final String ARG_URL = "url";
 
     private GiphySearch RefreshDAO = new GiphySearch();
+    private CardView giphyCard;
     private ImageView gif1;
     private String url;
 
@@ -53,6 +56,8 @@ public class GiphyFragment extends Fragment {
                 shareGifLink(url);
             }
         });
+        giphyCard = (CardView) view.findViewById(R.id.card_view);
+        giphyCard.setCardBackgroundColor(getResources().getColor(R.color.cardViewBackground));
         return view;
     }
 
