@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity  {
                     case R.id.action_trending:
                         break;
                     case R.id.action_share:
+
                         break;
                     case R.id.action_recent:
                         break;
@@ -82,8 +83,6 @@ public class MainActivity extends AppCompatActivity  {
         });
         search.setText(prefs.getString(PREF_KEY, ""));
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

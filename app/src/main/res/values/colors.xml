@@ -5,4 +5,5 @@
     <color name="white">#ffff</color>
     <color name="colorAccent">#FF4081</color>
     <color name="cardViewBackground">#000000</color>
+    <color name="not_selected">#8c8c8c</color>
 </resources>
