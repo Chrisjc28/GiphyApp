@@ -24,7 +24,7 @@ import com.example.android.giphyapi.fragments.GiphyFragment;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener  {
+public class MainActivity extends AppCompatActivity  {
 
     private static final String PREF_KEY = "search_key";
 
@@ -51,10 +51,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         getSupportActionBar();
 
         search = (EditText) findViewById(R.id.search);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         viewPager = (ViewPager) findViewById(R.id.pager);
 
-        swipeRefreshLayout.setOnRefreshListener(this);
         search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -84,17 +82,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onRefresh() {
-        swipeRefreshLayout.setRefreshing(false);
-//        Random randomGifGen = new Random();
-//        int gifArrayIndex = randomGifGen.nextInt(gifs.size());
-//        if (gifs.size() > 0) {
-//            getFragmentManager().beginTransaction().replace(R.id.pager,
-//                    GiphyFragment.newInstance(gifs.get(gifArrayIndex)))
-//                    .commit();
-//        }
-    }
+//    @Override
+//    public void onRefresh() {
+//        swipeRefreshLayout.setRefreshing(false);
+//    }
 
 
     private void collectGifs(String searchString) {
@@ -104,12 +95,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 viewPagerAdapter viewPagerAdapter = new viewPagerAdapter(getSupportFragmentManager(),gifs);
                 viewPager.setAdapter(viewPagerAdapter);
                 viewPagerAdapter.notifyDataSetChanged();
-                swipeRefreshLayout.setRefreshing(false);
-
             }
             @Override
             public void failure(String failed) {
-                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -126,12 +114,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         public viewPagerAdapter(FragmentManager fm, ArrayList<String> gifs) {
             super(fm);
             this.gifs = gifs;
-//            for (int i = 0; i <= gifs.size(); i++) {
-//                gifs.remove(gifs.get(i));
-//            }
-//            gifs = new ArrayList<>(gifs);
-//            notifyDataSetChanged();
-//            fm.beginTransaction().commit();
         }
 
         @Override
