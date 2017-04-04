@@ -31,8 +31,8 @@ dependencies {
     // JSON Parsing
     
     // recyclerview
-    
-    
+
+    compile 'com.android.support:design:25.3.0'
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.google.code.gson:gson:2.6.1'

@@ -3,6 +3,8 @@ package com.example.android.giphyapi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity  {
 
     private EditText search;
 
+    private BottomNavigationView bottomNavigationView;
+
     private GiphySearch RefreshDAO = new GiphySearch();
 
     SharedPreferences prefs;
@@ -49,6 +53,22 @@ public class MainActivity extends AppCompatActivity  {
 
         search = (EditText) findViewById(R.id.search);
         viewPager = (ViewPager) findViewById(R.id.pager);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected( @NonNull MenuItem item ) {
+                switch (item.getItemId()) {
+                    case R.id.action_trending:
+                        break;
+                    case R.id.action_share:
+                        break;
+                    case R.id.action_recent:
+                        break;
+                }
+                return false;
+            }
+        });
 
         search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -62,6 +82,8 @@ public class MainActivity extends AppCompatActivity  {
         });
         search.setText(prefs.getString(PREF_KEY, ""));
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
