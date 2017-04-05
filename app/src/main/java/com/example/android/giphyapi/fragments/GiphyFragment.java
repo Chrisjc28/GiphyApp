@@ -17,7 +17,6 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.android.giphyapi.R;
-import com.example.android.giphyapi.data.model.GiphySearch;
 
 import java.io.IOException;
 
@@ -28,7 +27,6 @@ import pl.droidsonroids.gif.GifDrawableBuilder;
 public class GiphyFragment extends Fragment {
     private static final String ARG_URL = "url";
 
-    private GiphySearch RefreshDAO = new GiphySearch();
     private CardView giphyCard;
     private ImageView gif1;
     private String url;
@@ -95,7 +93,7 @@ public class GiphyFragment extends Fragment {
         return fragment;
     }
 
-    private void shareGifLink(String url) {
+    public void shareGifLink(String url) {
         ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(getActivity())
                 .setType("text/plain")
                 .setSubject("GIF")

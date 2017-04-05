@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,14 +26,14 @@ import com.example.android.giphyapi.fragments.GiphyFragment;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     private static final String PREF_KEY = "search_key";
 
-    private EditText search;
-
     private BottomNavigationView bottomNavigationView;
     private GiphySearch RefreshDAO = new GiphySearch();
+
+    private EditText search;
 
     SharedPreferences prefs;
 
@@ -54,33 +55,8 @@ public class MainActivity extends AppCompatActivity  {
         viewPager = (ViewPager) findViewById(R.id.pager);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected( @NonNull MenuItem item ) {
-                switch (item.getItemId()) {
-                    case R.id.action_trending:
-                        break;
-                    case R.id.action_share:
-
-                        break;
-                    case R.id.action_recent:
-                        break;
-                }
-                return false;
-            }
-        });
-
-        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-               if (event != null) {
-                   collectGifs(search.getText().toString());
-                   saveSearchPref(search.getText().toString());
-               }
-                return false;
-            }
-        });
-        search.setText(prefs.getString(PREF_KEY, ""));
+        searchGifs();
+        bottomNavControls();
     }
 
     @Override
@@ -95,14 +71,10 @@ public class MainActivity extends AppCompatActivity  {
         switch (item.getItemId()) {
             case R.id.about:
                 Toast.makeText(MainActivity.this, "About clicked",Toast.LENGTH_LONG).show();
+            case R.id.action_share:
         }
         return super.onOptionsItemSelected(item);
     }
-
-//    @Override
-//    public void onRefresh() {
-//        swipeRefreshLayout.setRefreshing(false);
-//    }
 
 
     private void collectGifs(String searchString) {
@@ -112,6 +84,8 @@ public class MainActivity extends AppCompatActivity  {
                 viewPagerAdapter viewPagerAdapter = new viewPagerAdapter(getSupportFragmentManager(),gifs);
                 viewPager.setOffscreenPageLimit(2);
                 viewPager.setAdapter(viewPagerAdapter);
+                int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*2, getResources().getDisplayMetrics());
+                viewPager.setPageMargin(-margin);
                 viewPagerAdapter.notifyDataSetChanged();
             }
             @Override
@@ -120,10 +94,50 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
 
+    private void searchGifs() {
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event != null) {
+                    collectGifs(search.getText().toString());
+                    saveSearchPref(search.getText().toString());
+                }
+                return false;
+            }
+        });
+        search.setText(prefs.getString(PREF_KEY, ""));
+    }
+
     private void saveSearchPref(String searchPref) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PREF_KEY, searchPref);
         editor.apply();
+    }
+
+//    private void shareGifLink(String selectedGif) {
+//        ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(MainActivity.this)
+//                .setType("text/plain")
+//                .setSubject("GIF");
+//        Intent intent = builder.getIntent();
+//        intent.setAction(Intent.ACTION_SEND);
+//        Intent chooser = Intent.createChooser(intent, "Chooser");
+//        if (intent.resolveActivity(MainActivity.this.getPackageManager()) != null)
+//            startActivity(chooser);
+//    }
+
+    private void bottomNavControls() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected( @NonNull MenuItem item ) {
+                switch (item.getItemId()) {
+                    case R.id.action_trending:
+                        break;
+                    case R.id.action_recent:
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     public class viewPagerAdapter extends FragmentStatePagerAdapter {
