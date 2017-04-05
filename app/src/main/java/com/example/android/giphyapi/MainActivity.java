@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.giphyapi.adapters.TrendingViewPagerAdapter;
 import com.example.android.giphyapi.adapters.ViewPagerAdapter;
 import com.example.android.giphyapi.data.model.GiphyCallback;
 import com.example.android.giphyapi.data.model.GiphySearch;
@@ -68,6 +69,15 @@ public class MainActivity extends AppCompatActivity {
         viewPagerAdapter.notifyDataSetChanged();
     }
 
+    public void initTrendingViewPager() {
+        TrendingViewPagerAdapter trendingViewPagerAdapter = new TrendingViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
+        viewPager.setOffscreenPageLimit(5);
+        viewPager.setAdapter(trendingViewPagerAdapter);
+        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());
+        viewPager.setPageMargin(-margin);
+        trendingViewPagerAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -109,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void collectTrendingGifs(String searchString) {
-        TrendingDAO.getGif(searchString, new GiphyCallback() {
+    private void collectTrendingGifs() {
+        TrendingDAO.getGif(new GiphyCallback() {
             @Override
             public void success( ArrayList<String> gifs ) {
                 updateViewPager(gifs);
@@ -160,6 +170,8 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected( @NonNull MenuItem item ) {
                 switch (item.getItemId()) {
                     case R.id.action_trending:
+                        collectTrendingGifs();
+                        initTrendingViewPager();
                         break;
                     case R.id.action_recent:
                         break;

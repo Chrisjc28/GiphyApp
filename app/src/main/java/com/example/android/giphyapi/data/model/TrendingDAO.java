@@ -6,6 +6,6 @@ package com.example.android.giphyapi.data.model;
 
 public interface TrendingDAO {
 
-    void getGif(String searchString, GiphyCallback cb);
+    void getGif(GiphyCallback cb);
 
 }

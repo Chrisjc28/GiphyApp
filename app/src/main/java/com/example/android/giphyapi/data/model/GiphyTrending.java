@@ -20,7 +20,7 @@ public class GiphyTrending implements TrendingDAO {
     private static final String API_KEY = "dc6zaTOxFJmzC";
 
     @Override
-    public void getGif(String searchString, final GiphyCallback cb ) {
+    public void getGif(final GiphyCallback cb ) {
         String query = new StringBuilder()
                 .append("http://api.giphy.com/v1/gifs/trending?")
                 .append("api_key=")
