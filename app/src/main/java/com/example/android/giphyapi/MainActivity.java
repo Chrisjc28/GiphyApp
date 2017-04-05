@@ -1,6 +1,7 @@
 package com.example.android.giphyapi;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,16 +30,16 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private EditText search;
+    SharedPreferences prefs;
+    ViewPager viewPager;
+
     private static final String PREF_KEY = "search_key";
 
     private BottomNavigationView bottomNavigationView;
     private GiphySearch RefreshDAO = new GiphySearch();
 
-    private EditText search;
 
-    SharedPreferences prefs;
-
-    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,11 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.about:
                 Toast.makeText(MainActivity.this, "About clicked",Toast.LENGTH_LONG).show();
+                break;
             case R.id.action_share:
+                ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+                shareGifLink(adapter.getGifs().get(viewPager.getCurrentItem()).toString());
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -81,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
         RefreshDAO.getGif(searchString ,new GiphyCallback() {
             @Override
             public void success(ArrayList<String> gifs) {
-                viewPagerAdapter viewPagerAdapter = new viewPagerAdapter(getSupportFragmentManager(),gifs);
-                viewPager.setOffscreenPageLimit(2);
+                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),gifs);
+                viewPager.setOffscreenPageLimit(3);
                 viewPager.setAdapter(viewPagerAdapter);
                 int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());
                 viewPager.setPageMargin(-margin);
@@ -114,16 +120,17 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
-//    private void shareGifLink(String selectedGif) {
-//        ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(MainActivity.this)
-//                .setType("text/plain")
-//                .setSubject("GIF");
-//        Intent intent = builder.getIntent();
-//        intent.setAction(Intent.ACTION_SEND);
-//        Intent chooser = Intent.createChooser(intent, "Chooser");
-//        if (intent.resolveActivity(MainActivity.this.getPackageManager()) != null)
-//            startActivity(chooser);
-//    }
+    private void shareGifLink(String currentGif) {
+        ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(MainActivity.this)
+                .setType("text/plain")
+                .setSubject("GIF")
+                .setText(currentGif);
+        Intent intent = builder.getIntent();
+        intent.setAction(Intent.ACTION_SEND);
+        Intent chooser = Intent.createChooser(intent, "Chooser");
+        if (intent.resolveActivity(MainActivity.this.getPackageManager()) != null)
+            startActivity(chooser);
+    }
 
     private void bottomNavControls() {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -140,10 +147,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public class viewPagerAdapter extends FragmentStatePagerAdapter {
+    public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         ArrayList<String> gifs;
 
-        public viewPagerAdapter(FragmentManager fm, ArrayList<String> gifs) {
+        public ViewPagerAdapter( FragmentManager fm, ArrayList<String> gifs) {
             super(fm);
             this.gifs = gifs;
         }
@@ -151,6 +158,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
            return GiphyFragment.newInstance(gifs.get(position));
+        }
+
+        public ArrayList<String> getGifs() {
+            return gifs;
         }
 
         @Override
