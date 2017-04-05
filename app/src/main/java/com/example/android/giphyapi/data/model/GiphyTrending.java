@@ -12,19 +12,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by ccu17 on 28/03/2017.
+ * Created by ccu17 on 05/04/2017.
  */
 
-public class GiphySearch implements RefreshDAO {
+public class GiphyTrending implements TrendingDAO {
 
     private static final String API_KEY = "dc6zaTOxFJmzC";
 
     @Override
-    public void getGif(String searchString, final GiphyCallback cb) {
+    public void getGif(String searchString, final GiphyCallback cb ) {
         String query = new StringBuilder()
-                .append("http://api.giphy.com/v1/gifs/search?q=")
-                .append(searchString)
-                .append("&api_key=")
+                .append("http://api.giphy.com/v1/gifs/trending?")
+                .append("api_key=")
                 .append(API_KEY).toString();
 
         AndroidNetworking.get(query)
@@ -35,14 +34,14 @@ public class GiphySearch implements RefreshDAO {
                     public void onResponse(JSONObject response) {
                         try {
                             JSONArray data = response.getJSONArray("data");
-                            ArrayList<String> gifs = new ArrayList<>();
+                            ArrayList<String> trendingGifs = new ArrayList<>();
                             for (int i = 0; i < data.length(); i++) {
                                 JSONObject images = data.getJSONObject(i).getJSONObject("images");
                                 JSONObject fixedHeight = images.getJSONObject("fixed_height");
                                 String resultUrl = fixedHeight.getString("url");
-                                gifs.add(resultUrl);
+                                trendingGifs.add(resultUrl);
                             }
-                            cb.success(gifs);
+                            cb.success(trendingGifs);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -53,5 +52,6 @@ public class GiphySearch implements RefreshDAO {
                         cb.failure("Failed");
                     }
                 });
+
     }
 }

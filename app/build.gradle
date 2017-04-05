@@ -26,10 +26,9 @@ dependencies {
     })
 
     // Retrofit
-    
 
     // JSON Parsing
-    
+
     // recyclerview
 
     compile 'com.android.support:design:25.3.0'

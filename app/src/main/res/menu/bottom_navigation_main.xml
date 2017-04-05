@@ -15,4 +15,11 @@
         android:icon="@drawable/ic_favourite"
         android:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/about"
+        android:enabled="true"
+        android:icon="@drawable/ic_favourite"
+        android:showAsAction="ifRoom"/>
+
 </menu>
