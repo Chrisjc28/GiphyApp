@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 viewPagerAdapter viewPagerAdapter = new viewPagerAdapter(getSupportFragmentManager(),gifs);
                 viewPager.setOffscreenPageLimit(2);
                 viewPager.setAdapter(viewPagerAdapter);
-                int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*2, getResources().getDisplayMetrics());
+                int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());
                 viewPager.setPageMargin(-margin);
                 viewPagerAdapter.notifyDataSetChanged();
             }
