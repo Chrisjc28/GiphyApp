@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         refreshDAO.getGif(searchString, new GiphyCallback() {
             @Override
             public void success( ArrayList<String> gifs ) {
+                Log.i("CHRIS", "success: " + gifs);
                 updateViewPager(gifs);
             }
             @Override
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void failure( String failed ) {
                 //todo: same as above
-
+                Log.i("CHRIS", "Sorry there was an error displaying the gifs");
             }
         });
     }
@@ -158,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                     saveSearchPref(search.getText().toString());
                     return true;
                 } else {
-                    Log.i("Chirs", "onEditorAction: There was an error setting the listener ");
+                    Log.i("Chris", "onEditorAction: There was an error setting the listener ");
                     return false;
                 }
 //                todo: should we return false all the time?
