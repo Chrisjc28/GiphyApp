@@ -25,8 +25,8 @@ import pl.droidsonroids.gif.GifDrawableBuilder;
 public class GiphyFragment extends Fragment {
     private static final String ARG_URL = "url";
 
-    // does this need to be gif1 (considering it's the only gif)
-    private ImageView gif1;
+    // Todo: does this need to be gif1 (considering it's the only gif)
+    private ImageView gif;
     private String url;
 
     @Override
@@ -45,7 +45,7 @@ public class GiphyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_giphy_view, container, false);
-        gif1 = (ImageView) view.findViewById(R.id.image1);
+        gif = (ImageView) view.findViewById(R.id.image1);
         CardView giphyCard = (CardView) view.findViewById(R.id.card_view);
 //        getColor is deprecated, find another way to do this
         giphyCard.setCardBackgroundColor(getResources().getColor(R.color.cardViewBackground));
@@ -60,14 +60,14 @@ public class GiphyFragment extends Fragment {
 
 //    todo: loads of unused code
     private void displayGif() {
-        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(gif1);
+        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(gif);
         final SimpleTarget<byte[]> something = new SimpleTarget<byte[]>() {
             @Override
             public void onResourceReady(byte[] resource, GlideAnimation<? super byte[]> glideAnimation) {
               final pl.droidsonroids.gif.GifDrawable gifDrawable;
                 try {
                     gifDrawable = new GifDrawableBuilder().from(resource).build();
-                    gif1.setImageDrawable(gifDrawable);
+                    gif.setImageDrawable(gifDrawable);
                 } catch (final IOException e) {
                 }
             }
@@ -76,7 +76,7 @@ public class GiphyFragment extends Fragment {
                 .load(url)
                 .asGif()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(gif1);
+                .into(gif);
     }
 
     public static GiphyFragment newInstance(String url) {

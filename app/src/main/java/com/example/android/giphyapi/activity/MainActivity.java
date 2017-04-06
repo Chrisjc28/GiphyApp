@@ -164,7 +164,8 @@ public class MainActivity extends AppCompatActivity {
 //                todo: should we return false all the time?
             }
         });
-        search.setText(prefs.getString(PREF_KEY, ""));
+//        search.setText(prefs.getString(PREF_KEY, ""));
+        //Now crashed the app with the changes made
     }
 
     private void saveSearchPref(String searchPref) {

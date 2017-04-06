@@ -25,14 +25,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <!--Todo: hint should be in strings-->
-                <!--Todo: add drawableStart as well to handle right to left-->
                 <!--todo: see if there's an alternative for singleLine: true-->
                 <!--todo: move dimens to dimens.xml (or use the default ones)-->
                 <EditText
                     android:id="@+id/search"
-                    android:hint="Search for Gif"
+                    android:hint="@string/search_for_gif"
                     android:imeOptions="actionSearch"
+                    android:drawableStart="@drawable/ic_action_search"
                     android:drawableLeft="@drawable/ic_action_search"
                     android:singleLine="true"
                     android:layout_width="match_parent"
@@ -50,12 +49,11 @@
 
         </LinearLayout>
 
-    <!--todo: alignParentbottom is just for relativelayouts-->
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
         app:itemBackground="@color/white"
         app:itemIconTint="@color/not_selected"
         app:itemTextColor="@color/not_selected"

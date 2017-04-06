@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class GiphySearch implements RefreshDAO {
 
+    private static final String BASE_URL = "http://api.giphy.com/v1/gifs/";
     private static final String API_KEY = "dc6zaTOxFJmzC";
     private static final String JSON_OBJ_IMAGES = "images";
     private static final String JSON_OBJ_FIXED_HEIGHT = "fixed_height";
@@ -26,8 +27,9 @@ public class GiphySearch implements RefreshDAO {
         //todo: remove this string builder, use networking.get call properly
         String query = new StringBuilder()
                 //todo: move the base url to a constant
-                .append("http://api.giphy.com/v1/gifs/search?q=")
-                //move the query params to the right methods below
+                .append(BASE_URL)
+                .append("search?q=")
+                //Todo: move the query params to the right methods below
                 .append(searchString)
                 .append("&api_key=")
                 .append(API_KEY).toString();
