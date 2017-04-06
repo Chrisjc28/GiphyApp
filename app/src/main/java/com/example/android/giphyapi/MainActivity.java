@@ -6,9 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -22,9 +19,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.giphyapi.adapters.TrendingViewPagerAdapter;
+import com.example.android.giphyapi.adapters.ViewPagerAdapter;
 import com.example.android.giphyapi.data.model.GiphyCallback;
 import com.example.android.giphyapi.data.model.GiphySearch;
-import com.example.android.giphyapi.fragments.GiphyFragment;
+import com.example.android.giphyapi.data.model.GiphyTrending;
 
 import java.util.ArrayList;
 
@@ -38,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
     private GiphySearch RefreshDAO = new GiphySearch();
-
-
+    private GiphyTrending TrendingDAO = new GiphyTrending();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,45 +55,79 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.pager);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
 
+        initViewPager();
         searchGifs();
         bottomNavControls();
+    }
+
+    public void initViewPager() {
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.setAdapter(viewPagerAdapter);
+        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());
+        viewPager.setPageMargin(-margin);
+        viewPagerAdapter.notifyDataSetChanged();
+    }
+
+    public void initTrendingViewPager() {
+        TrendingViewPagerAdapter trendingViewPagerAdapter = new TrendingViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
+        viewPager.setOffscreenPageLimit(5);
+        viewPager.setAdapter(trendingViewPagerAdapter);
+        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());
+        viewPager.setPageMargin(-margin);
+        trendingViewPagerAdapter.notifyDataSetChanged();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+        menu.findItem(R.id.action_share).getIcon().setTint(getColor(R.color.white));
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.about:
-                Toast.makeText(MainActivity.this, "About clicked",Toast.LENGTH_LONG).show();
-                break;
             case R.id.action_share:
-                ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-                shareGifLink(adapter.getGifs().get(viewPager.getCurrentItem()).toString());
+                    ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+                if (adapter.getCount() == 0) {
+                    Toast.makeText(MainActivity.this, "Please search for a gif", Toast.LENGTH_LONG).show();
+                } else {
+                    shareGifLink(adapter.getGifs().get(viewPager.getCurrentItem()).toString());
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    public void updateViewPager(ArrayList<String> gifs) {
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), gifs);
+        viewPager.setAdapter(viewPagerAdapter);
+        viewPagerAdapter.notifyDataSetChanged();
+    }
 
     private void collectGifs(String searchString) {
-        RefreshDAO.getGif(searchString ,new GiphyCallback() {
+        RefreshDAO.getGif(searchString, new GiphyCallback() {
             @Override
-            public void success(ArrayList<String> gifs) {
-                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),gifs);
-                viewPager.setOffscreenPageLimit(3);
-                viewPager.setAdapter(viewPagerAdapter);
-                int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());
-                viewPager.setPageMargin(-margin);
-                viewPagerAdapter.notifyDataSetChanged();
+            public void success( ArrayList<String> gifs ) {
+                updateViewPager(gifs);
             }
             @Override
-            public void failure(String failed) {
+            public void failure( String failed ) {
+            }
+        });
+    }
+
+    private void collectTrendingGifs() {
+        TrendingDAO.getGif(new GiphyCallback() {
+            @Override
+            public void success( ArrayList<String> gifs ) {
+                updateViewPager(gifs);
+            }
+            @Override
+            public void failure( String failed ) {
+
             }
         });
     }
@@ -138,6 +170,8 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected( @NonNull MenuItem item ) {
                 switch (item.getItemId()) {
                     case R.id.action_trending:
+                        collectTrendingGifs();
+                        initTrendingViewPager();
                         break;
                     case R.id.action_recent:
                         break;
@@ -145,35 +179,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-    }
-
-    public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-        ArrayList<String> gifs;
-
-        public ViewPagerAdapter( FragmentManager fm, ArrayList<String> gifs) {
-            super(fm);
-            this.gifs = gifs;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-           return GiphyFragment.newInstance(gifs.get(position));
-        }
-
-        public ArrayList<String> getGifs() {
-            return gifs;
-        }
-
-        @Override
-        public int getItemPosition( Object object ) {
-            return POSITION_NONE;
-
-        }
-
-        @Override
-        public int getCount() {
-            return gifs.size();
-        }
     }
 
     @Override

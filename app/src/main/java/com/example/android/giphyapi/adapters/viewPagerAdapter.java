@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * Created by ccu17 on 04/04/2017.
  */
 
-public class ViewPagerAdapter extends FragmentStatePagerAdapter  {
+public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     ArrayList<String> gifs;
 
     public ViewPagerAdapter( FragmentManager fm, ArrayList<String> gifs) {
@@ -23,6 +23,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter  {
     @Override
     public Fragment getItem( int position) {
         return GiphyFragment.newInstance(gifs.get(position));
+    }
+
+    public ArrayList<String> getGifs() {
+        return gifs;
     }
 
     @Override
@@ -36,3 +40,5 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter  {
         return gifs.size();
     }
 }
+
+
