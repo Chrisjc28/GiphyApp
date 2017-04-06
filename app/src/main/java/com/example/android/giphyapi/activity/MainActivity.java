@@ -1,4 +1,4 @@
-package com.example.android.giphyapi;
+package com.example.android.giphyapi.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.giphyapi.R;
 import com.example.android.giphyapi.adapters.TrendingViewPagerAdapter;
 import com.example.android.giphyapi.adapters.ViewPagerAdapter;
 import com.example.android.giphyapi.data.model.GiphyCallback;
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar giphy_options_toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         giphy_options_toolbar.setTitleTextColor(getColor(R.color.white));
         setSupportActionBar(giphy_options_toolbar);
-        getSupportActionBar();
 
         search = (EditText) findViewById(R.id.search);
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -172,13 +172,21 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_trending:
                         collectTrendingGifs();
                         initTrendingViewPager();
+                        item.setChecked(true);
                         break;
                     case R.id.action_recent:
                         break;
+                    case R.id.action_about:
+                        startAboutActivity();
                 }
                 return false;
             }
         });
+    }
+
+    private void startAboutActivity() {
+        Intent About = new Intent(this, AboutActivity.class);
+        startActivity(About);
     }
 
     @Override
