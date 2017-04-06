@@ -10,9 +10,9 @@
 
     <item android:title="Help"
         android:id="@+id/action_help"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
     <item android:title="Settings"
         android:id="@+id/action_settings"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 </menu>
