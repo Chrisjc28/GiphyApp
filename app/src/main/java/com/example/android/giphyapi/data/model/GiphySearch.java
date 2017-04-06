@@ -18,11 +18,16 @@ import java.util.ArrayList;
 public class GiphySearch implements RefreshDAO {
 
     private static final String API_KEY = "dc6zaTOxFJmzC";
+    private static final String JSON_OBJ_IMAGES = "images";
+    private static final String JSON_OBJ_FIXED_HEIGHT = "fixed_height";
 
     @Override
     public void getGif(String searchString, final GiphyCallback cb) {
+        //todo: remove this string builder, use networking.get call properly
         String query = new StringBuilder()
+                //todo: move the base url to a constant
                 .append("http://api.giphy.com/v1/gifs/search?q=")
+                //move the query params to the right methods below
                 .append(searchString)
                 .append("&api_key=")
                 .append(API_KEY).toString();
@@ -34,11 +39,13 @@ public class GiphySearch implements RefreshDAO {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            //and potentially make this its own private method
+                            //todo: what happens if the API gives a different, unexpected response, try changing api key
                             JSONArray data = response.getJSONArray("data");
                             ArrayList<String> gifs = new ArrayList<>();
                             for (int i = 0; i < data.length(); i++) {
-                                JSONObject images = data.getJSONObject(i).getJSONObject("images");
-                                JSONObject fixedHeight = images.getJSONObject("fixed_height");
+                                JSONObject images = data.getJSONObject(i).getJSONObject(JSON_OBJ_IMAGES);
+                                JSONObject fixedHeight = images.getJSONObject(JSON_OBJ_FIXED_HEIGHT);
                                 String resultUrl = fixedHeight.getString("url");
                                 gifs.add(resultUrl);
                             }

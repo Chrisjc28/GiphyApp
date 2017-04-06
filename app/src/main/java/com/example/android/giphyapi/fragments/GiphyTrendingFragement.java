@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import pl.droidsonroids.gif.GifDrawableBuilder;
 
+/* Todo: delete, use GiphyFragment*/
 public class GiphyTrendingFragement extends Fragment {
 
     private static final String ARG_URL = "url";

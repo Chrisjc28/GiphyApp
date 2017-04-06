@@ -25,7 +25,7 @@ import pl.droidsonroids.gif.GifDrawableBuilder;
 public class GiphyFragment extends Fragment {
     private static final String ARG_URL = "url";
 
-    private CardView giphyCard;
+    // does this need to be gif1 (considering it's the only gif)
     private ImageView gif1;
     private String url;
 
@@ -46,7 +46,8 @@ public class GiphyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_giphy_view, container, false);
         gif1 = (ImageView) view.findViewById(R.id.image1);
-        giphyCard = (CardView) view.findViewById(R.id.card_view);
+        CardView giphyCard = (CardView) view.findViewById(R.id.card_view);
+//        getColor is deprecated, find another way to do this
         giphyCard.setCardBackgroundColor(getResources().getColor(R.color.cardViewBackground));
         return view;
     }
@@ -57,6 +58,7 @@ public class GiphyFragment extends Fragment {
         displayGif();
     }
 
+//    todo: loads of unused code
     private void displayGif() {
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(gif1);
         final SimpleTarget<byte[]> something = new SimpleTarget<byte[]>() {

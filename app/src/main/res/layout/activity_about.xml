@@ -9,6 +9,7 @@
     tools:context="com.example.android.giphyapi.activity.AboutActivity"
     android:orientation="vertical">
 
+    <!--Todo:change elevation to be a dimension-->
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
@@ -21,9 +22,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginLeft="@dimen/about_margin"
+        android:layout_marginRight="@dimen/about_margin"
+        android:layout_marginTop="@dimen/about_margin">
 
         <TextView
             android:id="@+id/about_line"

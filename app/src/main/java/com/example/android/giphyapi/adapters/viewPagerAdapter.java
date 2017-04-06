@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    ArrayList<String> gifs;
+    private ArrayList<String> gifs;
 
     public ViewPagerAdapter( FragmentManager fm, ArrayList<String> gifs) {
         super(fm);
@@ -23,6 +23,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem( int position) {
         return GiphyFragment.newInstance(gifs.get(position));
+//      return GiphyTrendingFragement.newInstance(gifs.get(position));
+
     }
 
     public ArrayList<String> getGifs() {

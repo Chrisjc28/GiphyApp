@@ -15,6 +15,7 @@ import java.util.ArrayList;
  * Created by ccu17 on 05/04/2017.
  */
 
+//Remove this class, but keep functionality, join it with other search class
 public class GiphyTrending implements TrendingDAO {
 
     private static final String API_KEY = "dc6zaTOxFJmzC";
