@@ -8,4 +8,5 @@
     <string name="trending">Trending</string>
     <string name="share">Share</string>
     <string name="recent">Recent</string>
+    <string name="about_line">This app was made as a sample app by Christopher Curran(Apprentice software developer)</string>
 </resources>

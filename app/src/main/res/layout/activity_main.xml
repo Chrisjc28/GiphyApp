@@ -13,11 +13,6 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <!--<android.support.v4.widget.SwipeRefreshLayout-->
-        <!--android:id="@+id/swipe_container"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-
         <LinearLayout
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
@@ -25,16 +20,26 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/search"
-                android:hint="Search for Gif"
-                android:imeOptions="actionSearch"
-                android:singleLine="true"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"/>
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/search"
+                    android:hint="Search for Gif"
+                    android:imeOptions="actionSearch"
+                    android:drawableLeft="@drawable/ic_action_search"
+                    android:singleLine="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"/>
+
+            </LinearLayout>
+
+
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager"
@@ -43,8 +48,6 @@
 
         </LinearLayout>
 
-
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
