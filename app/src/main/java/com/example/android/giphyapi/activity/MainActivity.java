@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         initBottomNavigation();
         searchGifs();
         prefs = getPreferences(Context.MODE_APPEND);
-
     }
 
     /*Todo: refactor normal and trending view pager to use the same adapter/implementation with a different dataset
