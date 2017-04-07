@@ -31,18 +31,18 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String PREF_KEY = "search_key";
-
-
-
-    private EditText search;
-    private SharedPreferences prefs;
-    private ViewPager viewPager;
-
-    //Todo:re-order all of the class level variables
+    private static final int OFF_SCREEN_PAGE_LIMIT = 5;
 
     private BottomNavigationView bottomNavigationView;
     private GiphySearch refreshDAO = new GiphySearch();
     private GiphyTrending trendingDAO = new GiphyTrending();
+
+    private EditText search;
+    private SharedPreferences prefs;
+    private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
+
+    //Todo:re-order all of the class level variables
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
         //todo: move these init methods to be all together and rename
         initViewPager();
+        initBottomNavigation();
         searchGifs();
-        bottomNavControls();
         prefs = getPreferences(Context.MODE_APPEND);
 
     }
@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
     * Todo: CHange the -margin into a dimen in dimens.xml like: getResources().getDimensionPixelSize(R.dimen.pager_negative_margin)*/
 //
     public void initViewPager() {
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
-        viewPager.setOffscreenPageLimit(3);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
+        viewPager.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
         viewPager.setAdapter(viewPagerAdapter);
         int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());
         viewPager.setPageMargin(-margin);
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(chooser);
     }
 
-    private void bottomNavControls() {
+    private void initBottomNavigation() {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected( @NonNull MenuItem item ) {
