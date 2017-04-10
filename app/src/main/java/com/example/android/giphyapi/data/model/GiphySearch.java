@@ -1,6 +1,7 @@
 package com.example.android.giphyapi.data.model;
 
 import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.ANRequest;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
@@ -17,36 +18,31 @@ import java.util.ArrayList;
 
 public class GiphySearch implements GiphyDAO {
 
-    private static final String BASE_URL = "http://api.giphy.com/v1/gifs/";
+    private static final String BASE_URL = "http://api.giphy.com/v1/gifs/{uri}";
     private static final String API_KEY = "dc6zaTOxFJmzC";
     private static final String JSON_OBJ_IMAGES = "images";
     private static final String JSON_OBJ_FIXED_HEIGHT = "fixed_height";
 
     @Override
     public void getGif(String searchString, final GiphyCallback cb) {
-        //todo: remove this string builder, use networking.get call properly
-        String query = new StringBuilder()
-                .append(BASE_URL)
-                .append("searchq=")
-                //Todo: move the query params to the right methods below
-                .append(searchString)
-                .append("&api_key=")
-                .append(API_KEY).toString();
         //todo: what happens if the API gives a different, unexpected response, try changing api key
-
-        AndroidNetworking.get(query)
+        ANRequest request = AndroidNetworking.get(BASE_URL)
+                .addPathParameter("uri", "search")
+                .addQueryParameter("q", searchString)
+                .addQueryParameter("api_key", API_KEY)
                 .setPriority(Priority.LOW)
-                .build()
-                .getAsJSONObject(new JSONObjectRequestListener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        jsonParsing(response, cb);
-                    }
-                    @Override
-                    public void onError(ANError anError) {
-                        cb.failure("Failed");
-                    }
-                });
+                .build();
+
+        request.getAsJSONObject(new JSONObjectRequestListener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                jsonParsing(response, cb);
+            }
+            @Override
+            public void onError(ANError anError) {
+                cb.failure("Failed");
+            }
+        });
     }
 
 
