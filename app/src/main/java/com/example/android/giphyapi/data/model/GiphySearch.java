@@ -27,7 +27,7 @@ public class GiphySearch implements GiphyDAO {
         //todo: remove this string builder, use networking.get call properly
         String query = new StringBuilder()
                 .append(BASE_URL)
-                .append("search?q=")
+                .append("searchq=")
                 //Todo: move the query params to the right methods below
                 .append(searchString)
                 .append("&api_key=")
@@ -36,8 +36,6 @@ public class GiphySearch implements GiphyDAO {
 
         AndroidNetworking.get(query)
                 .setPriority(Priority.LOW)
-//                .addQueryParameter("searchedGif", searchString)
-//                .addQueryParameter("apiKey", API_KEY.toString())
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
@@ -50,6 +48,7 @@ public class GiphySearch implements GiphyDAO {
                     }
                 });
     }
+
 
     @Override
     public void getTrendingGif( GiphyCallback cb ) {

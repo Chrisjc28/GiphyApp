@@ -32,6 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+
     private static final String PREF_KEY = "search_key";
     private static final int OFF_SCREEN_PAGE_LIMIT = 5;
 
@@ -61,30 +62,26 @@ public class MainActivity extends AppCompatActivity {
         giphyOptionsToolbar.setTitleTextColor(getColor(R.color.white));
         setSupportActionBar(giphyOptionsToolbar);
 
-        //todo: move these init methods to be all together and rename
         initViewPager();
         initBottomNavigation();
-        searchGifs();
+        initSearchValueListener();
         prefs = getPreferences(Context.MODE_APPEND);
     }
 
-    /*Todo: refactor normal and trending view pager to use the same adapter/implementation with a different dataset
-    * Todo: also, make the adapter a field.*/
-    /*Todo: Change offscreenpagelimit to a constant
-    * Todo: CHange the -margin into a dimen in dimens.xml like: getResources().getDimensionPixelSize(R.dimen.pager_negative_margin)*/
-//
+    /* Todo: also, make the adapter a field.*/
+    /* Todo: Change the -margin into a dimen in dimens.xml like: getResources().getDimensionPixelSize(R.dimen.pager_negative_margin)*/
+
     public void initViewPager() {
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
         viewPager.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
         viewPager.setAdapter(viewPagerAdapter);
         int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());
         viewPager.setPageMargin(-margin);
-//        viewPagerAdapter.notifyDataSetChanged();
     }
 
     public void initTrendingViewPager() {
         ViewPagerAdapter trendingViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
-        viewPager.setOffscreenPageLimit(5);
+        viewPager.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
         viewPager.setAdapter(trendingViewPagerAdapter);
         int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());
         viewPager.setPageMargin(-margin);
@@ -121,9 +118,7 @@ public class MainActivity extends AppCompatActivity {
         viewPagerAdapter.notifyDataSetChanged();
     }
 
-    private void collectGifs(String searchString) {
-        //Todo: GiphyDAO and TrendingDAO can just be GiphyDAO and have two methods
-        //Potnetially change method names as well to be more appropriate
+    private void displayingSearchedGifs( String searchString) {
         giphyDAO.getGif(searchString, new GiphyCallback() {
             @Override
             public void success( ArrayList<String> gifs ) {
@@ -151,12 +146,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 //    todo: rename this method to something more appropriate
-    private void searchGifs() {
+    private void initSearchValueListener() {
         search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (event != null) {
-                    collectGifs(search.getText().toString());
+                    displayingSearchedGifs(search.getText().toString());
                     saveSearchPref(search.getText().toString());
                     return true;
                 } else {
