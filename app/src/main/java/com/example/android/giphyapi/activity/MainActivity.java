@@ -29,17 +29,26 @@ import com.example.android.giphyapi.data.model.GiphyTrending;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
     private static final String PREF_KEY = "search_key";
     private static final int OFF_SCREEN_PAGE_LIMIT = 5;
 
-    private BottomNavigationView bottomNavigationView;
     private GiphySearch refreshDAO = new GiphySearch();
     private GiphyTrending trendingDAO = new GiphyTrending();
 
-    private EditText search;
+    @BindView(R.id.bottom_nav)
+    BottomNavigationView bottomNavigationView;
+    @BindView(R.id.search)
+    EditText search;
+    @BindView(R.id.pager)
+    ViewPager viewPager;
+    @BindView(R.id.my_toolbar)
+    Toolbar giphyOptionsToolbar;
+
     private SharedPreferences prefs;
-    private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
 
     //Todo:re-order all of the class level variables
@@ -48,11 +57,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        search = (EditText) findViewById(R.id.search);
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
-        Toolbar giphyOptionsToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        ButterKnife.bind(this);
 
         giphyOptionsToolbar.setTitleTextColor(getColor(R.color.white));
         setSupportActionBar(giphyOptionsToolbar);
