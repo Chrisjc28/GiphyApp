@@ -39,8 +39,7 @@ public class GiphyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_giphy_view, container, false);
         gif = (ImageView) view.findViewById(R.id.image1);
         CardView giphyCard = (CardView) view.findViewById(R.id.card_view);
-//        Todo: getColor is deprecated, find another way to do this
-        giphyCard.setCardBackgroundColor(getResources().getColor(R.color.cardViewBackground));
+        giphyCard.setCardBackgroundColor(getContext().getColor(R.color.cardViewBackground));
         return view;
     }
 

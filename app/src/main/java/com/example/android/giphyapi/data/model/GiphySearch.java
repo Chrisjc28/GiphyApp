@@ -1,5 +1,7 @@
 package com.example.android.giphyapi.data.model;
 
+import android.util.Log;
+
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.ANRequest;
 import com.androidnetworking.common.Priority;
@@ -12,6 +14,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by ccu17 on 28/03/2017.
  */
@@ -23,9 +27,13 @@ public class GiphySearch implements GiphyDAO {
     private static final String JSON_OBJ_IMAGES = "images";
     private static final String JSON_OBJ_FIXED_HEIGHT = "fixed_height";
 
+
     @Override
     public void getGif(String searchString, final GiphyCallback cb) {
-        //todo: what happens if the API gives a different, unexpected response, try changing api key
+        if (API_KEY.equals("")) {
+            Log.i(TAG, "getGif: There was an issue with the api key.");
+        }
+
         ANRequest request = AndroidNetworking.get(BASE_URL)
                 .addPathParameter("uri", "search")
                 .addQueryParameter("q", searchString)
