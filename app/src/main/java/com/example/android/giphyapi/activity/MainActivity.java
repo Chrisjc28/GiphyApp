@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.giphyapi.R;
-import com.example.android.giphyapi.adapters.TrendingViewPagerAdapter;
 import com.example.android.giphyapi.adapters.ViewPagerAdapter;
 import com.example.android.giphyapi.data.model.GiphyCallback;
 import com.example.android.giphyapi.data.model.GiphySearch;
@@ -33,11 +31,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+
     private static final String PREF_KEY = "search_key";
     private static final int OFF_SCREEN_PAGE_LIMIT = 5;
 
-    private GiphySearch refreshDAO = new GiphySearch();
-    private GiphyTrending trendingDAO = new GiphyTrending();
+    private GiphySearch giphyDAO = new GiphySearch();
+    private GiphyTrending giphyTrendingDAO = new GiphyTrending();
 
     @BindView(R.id.bottom_nav)
     BottomNavigationView bottomNavigationView;
@@ -51,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private ViewPagerAdapter viewPagerAdapter;
 
-    //Todo:re-order all of the class level variables
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,33 +60,24 @@ public class MainActivity extends AppCompatActivity {
         giphyOptionsToolbar.setTitleTextColor(getColor(R.color.white));
         setSupportActionBar(giphyOptionsToolbar);
 
-        //todo: move these init methods to be all together and rename
         initViewPager();
         initBottomNavigation();
-        searchGifs();
+        initSearchValueListener();
         prefs = getPreferences(Context.MODE_APPEND);
     }
 
-    /*Todo: refactor normal and trending view pager to use the same adapter/implementation with a different dataset
-    * Todo: also, make the adapter a field.*/
-    /*Todo: Change offscreenpagelimit to a constant
-    * Todo: CHange the -margin into a dimen in dimens.xml like: getResources().getDimensionPixelSize(R.dimen.pager_negative_margin)*/
-//
     public void initViewPager() {
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
         viewPager.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
         viewPager.setAdapter(viewPagerAdapter);
-        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());
-        viewPager.setPageMargin(-margin);
-//        viewPagerAdapter.notifyDataSetChanged();
+        viewPager.setPageMargin((int) getResources().getDimension(R.dimen.minus_clip_bounds));
     }
 
     public void initTrendingViewPager() {
-        TrendingViewPagerAdapter trendingViewPagerAdapter = new TrendingViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
-        viewPager.setOffscreenPageLimit(5);
+        ViewPagerAdapter trendingViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
+        viewPager.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
         viewPager.setAdapter(trendingViewPagerAdapter);
-        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());
-        viewPager.setPageMargin(-margin);
+        viewPager.setPageMargin((int) getResources().getDimension(R.dimen.minus_clip_bounds));
         trendingViewPagerAdapter.notifyDataSetChanged();
     }
 
@@ -108,8 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 if (adapter.getCount() == 0) {
                     Toast.makeText(MainActivity.this, "Please search for a gif", Toast.LENGTH_LONG).show();
                 } else {
-                    //todo: create getGif(int position) (singular) method in adapter and use that instead
-                    shareGifLink(adapter.getGifs().get(viewPager.getCurrentItem()));
+                    shareGifLink(adapter.getCurrentGif(viewPager.getCurrentItem()));
                 }
                 break;
         }
@@ -122,10 +110,8 @@ public class MainActivity extends AppCompatActivity {
         viewPagerAdapter.notifyDataSetChanged();
     }
 
-    private void collectGifs(String searchString) {
-        //Todo: RefreshDAO and TrendingDAO can just be GiphyDAO and have two methods
-        //Potnetially change method names as well to be more appropriate
-        refreshDAO.getGif(searchString, new GiphyCallback() {
+    private void displayingSearchedGifs( String searchString) {
+        giphyDAO.getGif(searchString, new GiphyCallback() {
             @Override
             public void success( ArrayList<String> gifs ) {
                 Log.i("CHRIS", "success: " + gifs);
@@ -133,44 +119,39 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void failure( String failed ) {
-//                todo: Do something, log at least, toast, snack bar etc.?
                 Log.i("CHRIS", "Sorry there was an error displaying the gifs");
             }
         });
     }
 
     private void collectTrendingGifs() {
-        trendingDAO.getGif(new GiphyCallback() {
+        giphyTrendingDAO.getTrendingGif(new GiphyCallback() {
             @Override
             public void success( ArrayList<String> gifs ) {
                 updateViewPager(gifs);
             }
             @Override
             public void failure( String failed ) {
-                //todo: same as above
                 Log.i("CHRIS", "Sorry there was an error displaying the gifs");
             }
         });
     }
 
-//    todo: rename this method to something more appropriate
-    private void searchGifs() {
+    private void initSearchValueListener() {
         search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (event != null) {
-                    collectGifs(search.getText().toString());
+                    displayingSearchedGifs(search.getText().toString());
                     saveSearchPref(search.getText().toString());
                     return true;
                 } else {
                     Log.i("Chris", "onEditorAction: There was an error setting the listener ");
                     return false;
                 }
-//                todo: should we return false all the time?
             }
         });
 //        search.setText(prefs.getString(PREF_KEY, ""));
-        //Now crashed the app with the changes made
     }
 
     private void saveSearchPref(String searchPref) {
@@ -186,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
                 .setText(currentGif);
         Intent intent = builder.getIntent();
         intent.setAction(Intent.ACTION_SEND);
-        // todo: should this be called "chooser"? and put in strings.xml
         Intent chooser = Intent.createChooser(intent, getString(R.string.Chooser));
         if (intent.resolveActivity(getPackageManager()) != null)
             startActivity(chooser);
@@ -208,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
                         startAboutActivity();
                         break;
                 }
-                //todo: should this return false all the time
                 return true;
             }
         });

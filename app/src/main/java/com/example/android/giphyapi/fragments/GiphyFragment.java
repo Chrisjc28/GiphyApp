@@ -11,13 +11,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.android.giphyapi.R;
-
-import java.io.IOException;
-
-import pl.droidsonroids.gif.GifDrawableBuilder;
 
 
 
@@ -45,8 +39,7 @@ public class GiphyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_giphy_view, container, false);
         gif = (ImageView) view.findViewById(R.id.image1);
         CardView giphyCard = (CardView) view.findViewById(R.id.card_view);
-//        Todo: getColor is deprecated, find another way to do this
-        giphyCard.setCardBackgroundColor(getResources().getColor(R.color.cardViewBackground));
+        giphyCard.setCardBackgroundColor(getContext().getColor(R.color.cardViewBackground));
         return view;
     }
 
@@ -56,19 +49,7 @@ public class GiphyFragment extends Fragment {
         displayGif();
     }
 
-//    todo: loads of unused code
     private void displayGif() {
-        final SimpleTarget<byte[]> something = new SimpleTarget<byte[]>() {
-            @Override
-            public void onResourceReady(byte[] resource, GlideAnimation<? super byte[]> glideAnimation) {
-              final pl.droidsonroids.gif.GifDrawable gifDrawable;
-                try {
-                    gifDrawable = new GifDrawableBuilder().from(resource).build();
-                    gif.setImageDrawable(gifDrawable);
-                } catch (final IOException e) {
-                }
-            }
-        };
         Glide.with(this)
                 .load(url)
                 .asGif()

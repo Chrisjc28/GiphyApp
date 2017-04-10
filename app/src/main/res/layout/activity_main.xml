@@ -25,14 +25,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <!--todo: see if there's an alternative for singleLine: true-->
                 <EditText
                     android:id="@+id/search"
                     android:hint="@string/search_for_gif"
                     android:imeOptions="actionSearch"
                     android:drawableStart="@drawable/ic_action_search"
                     android:drawableLeft="@drawable/ic_action_search"
-                    android:singleLine="true"
+                    android:inputType="text"
+                    android:maxLines="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/edit_text_margin_top"

@@ -23,7 +23,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem( int position) {
         return GiphyFragment.newInstance(gifs.get(position));
-//      return GiphyTrendingFragement.newInstance(gifs.get(position));
 
     }
 
@@ -40,6 +39,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return gifs.size();
+    }
+
+    public String getCurrentGif(int position) {
+        return gifs.get(position);
     }
 }
 

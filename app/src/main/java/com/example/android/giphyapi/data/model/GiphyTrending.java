@@ -1,6 +1,7 @@
 package com.example.android.giphyapi.data.model;
 
 import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.ANRequest;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
@@ -16,43 +17,51 @@ import java.util.ArrayList;
  */
 
 //Remove this class, but keep functionality, join it with other search class
-public class GiphyTrending implements TrendingDAO {
+public class GiphyTrending implements GiphyDAO {
 
+    private static final String BASE_URL = "http://api.giphy.com/v1/gifs/{uri}";
     private static final String API_KEY = "dc6zaTOxFJmzC";
 
     @Override
-    public void getGif(final GiphyCallback cb ) {
-        String query = new StringBuilder()
-                .append("http://api.giphy.com/v1/gifs/trending?")
-                .append("api_key=")
-                .append(API_KEY).toString();
+    public void getTrendingGif( final GiphyCallback cb ) {
+        ANRequest request = AndroidNetworking.get(BASE_URL)
+                .addPathParameter("uri", "trending")
+                .addQueryParameter("q", "")
+                .addQueryParameter("api_key", API_KEY)
+                .setPriority(Priority.LOW)
+                .build();
 
-        AndroidNetworking.get(query)
-                .setPriority(Priority.MEDIUM)
-                .build()
-                .getAsJSONObject(new JSONObjectRequestListener() {
+                request.getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray data = response.getJSONArray("data");
-                            ArrayList<String> trendingGifs = new ArrayList<>();
-                            for (int i = 0; i < data.length(); i++) {
-                                JSONObject images = data.getJSONObject(i).getJSONObject("images");
-                                JSONObject fixedHeight = images.getJSONObject("fixed_height");
-                                String resultUrl = fixedHeight.getString("url");
-                                trendingGifs.add(resultUrl);
-                            }
-                            cb.success(trendingGifs);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                       jsonParsing(response, cb);
                     }
-
                     @Override
                     public void onError(ANError anError) {
                         cb.failure("Failed");
                     }
                 });
+    }
+
+    @Override
+    public void getGif( String searchString, GiphyCallback cb ) {
 
     }
+
+    public void jsonParsing(JSONObject response ,final GiphyCallback cb) {
+        try {
+            JSONArray data = response.getJSONArray("data");
+            ArrayList<String> trendingGifs = new ArrayList<>();
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject images = data.getJSONObject(i).getJSONObject("images");
+                JSONObject fixedHeight = images.getJSONObject("fixed_height");
+                String resultUrl = fixedHeight.getString("url");
+                trendingGifs.add(resultUrl);
+            }
+            cb.success(trendingGifs);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
