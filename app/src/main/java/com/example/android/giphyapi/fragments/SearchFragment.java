@@ -15,7 +15,7 @@ import com.example.android.giphyapi.R;
 
 
 
-public class GiphyFragment extends Fragment {
+public class SearchFragment extends Fragment {
     private static final String ARG_URL = "url";
 
     private ImageView gif;
@@ -36,7 +36,7 @@ public class GiphyFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_giphy_view, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
         gif = (ImageView) view.findViewById(R.id.image1);
         CardView giphyCard = (CardView) view.findViewById(R.id.card_view);
         giphyCard.setCardBackgroundColor(getContext().getColor(R.color.cardViewBackground));
@@ -57,8 +57,8 @@ public class GiphyFragment extends Fragment {
                 .into(gif);
     }
 
-    public static GiphyFragment newInstance(String url) {
-        GiphyFragment fragment = new GiphyFragment();
+    public static SearchFragment newInstance( String url) {
+        SearchFragment fragment = new SearchFragment();
         Bundle args = new Bundle();
         args.putString(ARG_URL, url);
         fragment.setArguments(args);

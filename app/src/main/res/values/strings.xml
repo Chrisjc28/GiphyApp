@@ -9,4 +9,7 @@
     <string name="about_line">This app was made as a sample app by Christopher Curran(Apprentice software developer)</string>
     <string name="Chooser">Chooser</string>
     <string name="search_for_gif">Search for Gif</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

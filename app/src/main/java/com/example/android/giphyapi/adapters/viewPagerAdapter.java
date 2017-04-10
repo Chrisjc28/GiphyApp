@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.example.android.giphyapi.fragments.GiphyFragment;
+import com.example.android.giphyapi.fragments.SearchFragment;
 
 import java.util.ArrayList;
 
@@ -22,7 +22,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem( int position) {
-        return GiphyFragment.newInstance(gifs.get(position));
+        return SearchFragment.newInstance(gifs.get(position));
 
     }
 
