@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.android.giphyapi.R;
 
@@ -25,7 +24,6 @@ import pl.droidsonroids.gif.GifDrawableBuilder;
 public class GiphyFragment extends Fragment {
     private static final String ARG_URL = "url";
 
-    // Todo: does this need to be gif1 (considering it's the only gif)
     private ImageView gif;
     private String url;
 
@@ -47,7 +45,7 @@ public class GiphyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_giphy_view, container, false);
         gif = (ImageView) view.findViewById(R.id.image1);
         CardView giphyCard = (CardView) view.findViewById(R.id.card_view);
-//        getColor is deprecated, find another way to do this
+//        Todo: getColor is deprecated, find another way to do this
         giphyCard.setCardBackgroundColor(getResources().getColor(R.color.cardViewBackground));
         return view;
     }
@@ -60,7 +58,6 @@ public class GiphyFragment extends Fragment {
 
 //    todo: loads of unused code
     private void displayGif() {
-        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(gif);
         final SimpleTarget<byte[]> something = new SimpleTarget<byte[]>() {
             @Override
             public void onResourceReady(byte[] resource, GlideAnimation<? super byte[]> glideAnimation) {

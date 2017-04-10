@@ -26,7 +26,6 @@
                 android:orientation="horizontal">
 
                 <!--todo: see if there's an alternative for singleLine: true-->
-                <!--todo: move dimens to dimens.xml (or use the default ones)-->
                 <EditText
                     android:id="@+id/search"
                     android:hint="@string/search_for_gif"
