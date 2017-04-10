@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.example.android.giphyapi.fragments.GiphyTrendingFragement;
+import com.example.android.giphyapi.fragments.GiphyFragment;
 
 import java.util.ArrayList;
 
@@ -28,7 +28,7 @@ public class TrendingViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem( int position ) {
-        return GiphyTrendingFragement.newInstance(gifs.get(position));
+        return GiphyFragment.newInstance(gifs.get(position));
     }
 
     @Override
