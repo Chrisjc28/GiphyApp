@@ -12,7 +12,9 @@ import java.util.ArrayList;
  * Created by ccu17 on 05/04/2017.
  */
 
+//todo: delete this, use ViewPagerAdapter
 public class TrendingViewPagerAdapter extends FragmentStatePagerAdapter {
+    //todo: privatr
     ArrayList<String> gifs;
 
     public TrendingViewPagerAdapter( FragmentManager fm, ArrayList<String> gifs ) {

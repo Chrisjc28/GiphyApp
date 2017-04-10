@@ -13,9 +13,9 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        Toolbar giphy_options_toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        giphy_options_toolbar.setTitleTextColor(getColor(R.color.white));
-        setSupportActionBar(giphy_options_toolbar);
+        Toolbar giphyOptionsToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        giphyOptionsToolbar.setTitleTextColor(getColor(R.color.white));
+        setSupportActionBar(giphyOptionsToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_up_btn);
 
