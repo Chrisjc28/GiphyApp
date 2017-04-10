@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREF_KEY = "search_key";
     private static final int OFF_SCREEN_PAGE_LIMIT = 5;
 
-    private GiphySearch refreshDAO = new GiphySearch();
-    private GiphyTrending trendingDAO = new GiphyTrending();
+    private GiphySearch giphyDAO = new GiphySearch();
+    private GiphyTrending giphyTrendingDAO = new GiphyTrending();
 
     @BindView(R.id.bottom_nav)
     BottomNavigationView bottomNavigationView;
@@ -122,9 +122,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void collectGifs(String searchString) {
-        //Todo: RefreshDAO and TrendingDAO can just be GiphyDAO and have two methods
+        //Todo: GiphyDAO and TrendingDAO can just be GiphyDAO and have two methods
         //Potnetially change method names as well to be more appropriate
-        refreshDAO.getGif(searchString, new GiphyCallback() {
+        giphyDAO.getGif(searchString, new GiphyCallback() {
             @Override
             public void success( ArrayList<String> gifs ) {
                 Log.i("CHRIS", "success: " + gifs);
@@ -132,21 +132,19 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void failure( String failed ) {
-//                todo: Do something, log at least, toast, snack bar etc.?
                 Log.i("CHRIS", "Sorry there was an error displaying the gifs");
             }
         });
     }
 
     private void collectTrendingGifs() {
-        trendingDAO.getGif(new GiphyCallback() {
+        giphyTrendingDAO.getTrendingGif(new GiphyCallback() {
             @Override
             public void success( ArrayList<String> gifs ) {
                 updateViewPager(gifs);
             }
             @Override
             public void failure( String failed ) {
-                //todo: same as above
                 Log.i("CHRIS", "Sorry there was an error displaying the gifs");
             }
         });
@@ -165,11 +163,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("Chris", "onEditorAction: There was an error setting the listener ");
                     return false;
                 }
-//                todo: should we return false all the time?
             }
         });
 //        search.setText(prefs.getString(PREF_KEY, ""));
-        //Now crashed the app with the changes made
     }
 
     private void saveSearchPref(String searchPref) {
@@ -185,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
                 .setText(currentGif);
         Intent intent = builder.getIntent();
         intent.setAction(Intent.ACTION_SEND);
-        // todo: should this be called "chooser"? and put in strings.xml
         Intent chooser = Intent.createChooser(intent, getString(R.string.Chooser));
         if (intent.resolveActivity(getPackageManager()) != null)
             startActivity(chooser);
@@ -207,7 +202,6 @@ public class MainActivity extends AppCompatActivity {
                         startAboutActivity();
                         break;
                 }
-                //todo: should this return false all the time
                 return true;
             }
         });

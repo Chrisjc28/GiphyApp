@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * Created by ccu17 on 28/03/2017.
  */
 
-public class GiphySearch implements RefreshDAO {
+public class GiphySearch implements GiphyDAO {
 
     private static final String BASE_URL = "http://api.giphy.com/v1/gifs/";
     private static final String API_KEY = "dc6zaTOxFJmzC";
@@ -49,6 +49,11 @@ public class GiphySearch implements RefreshDAO {
                         cb.failure("Failed");
                     }
                 });
+    }
+
+    @Override
+    public void getTrendingGif( GiphyCallback cb ) {
+
     }
 
     public void jsonParsing(JSONObject response ,final GiphyCallback cb) {

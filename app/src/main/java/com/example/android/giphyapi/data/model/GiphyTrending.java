@@ -16,12 +16,12 @@ import java.util.ArrayList;
  */
 
 //Remove this class, but keep functionality, join it with other search class
-public class GiphyTrending implements TrendingDAO {
+public class GiphyTrending implements GiphyDAO {
 
     private static final String API_KEY = "dc6zaTOxFJmzC";
 
     @Override
-    public void getGif(final GiphyCallback cb ) {
+    public void getTrendingGif( final GiphyCallback cb ) {
         String query = new StringBuilder()
                 .append("http://api.giphy.com/v1/gifs/trending?")
                 .append("api_key=")
@@ -55,4 +55,10 @@ public class GiphyTrending implements TrendingDAO {
                 });
 
     }
+
+    @Override
+    public void getGif( String searchString, GiphyCallback cb ) {
+
+    }
+
 }
