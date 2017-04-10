@@ -7,4 +7,5 @@
     <dimen name="edit_text_margin_top">20dp</dimen>
     <dimen name="edit_text_margin_left">25dp</dimen>
     <dimen name="edit_text_margin_right">25dp</dimen>
+    <dimen name="minus_clip_bounds">-100dp</dimen>
 </resources>

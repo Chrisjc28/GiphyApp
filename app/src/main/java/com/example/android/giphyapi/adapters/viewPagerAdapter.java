@@ -40,6 +40,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return gifs.size();
     }
+
+    public String getCurrentGif(int position) {
+        return gifs.get(position);
+    }
 }
 
 

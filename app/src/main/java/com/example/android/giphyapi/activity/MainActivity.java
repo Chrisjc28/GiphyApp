@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private ViewPagerAdapter viewPagerAdapter;
 
-    //Todo:re-order all of the class level variables
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,23 +66,18 @@ public class MainActivity extends AppCompatActivity {
         prefs = getPreferences(Context.MODE_APPEND);
     }
 
-    /* Todo: also, make the adapter a field.*/
-    /* Todo: Change the -margin into a dimen in dimens.xml like: getResources().getDimensionPixelSize(R.dimen.pager_negative_margin)*/
-
     public void initViewPager() {
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
         viewPager.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
         viewPager.setAdapter(viewPagerAdapter);
-        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());
-        viewPager.setPageMargin(-margin);
+        viewPager.setPageMargin((int) getResources().getDimension(R.dimen.minus_clip_bounds));
     }
 
     public void initTrendingViewPager() {
         ViewPagerAdapter trendingViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
         viewPager.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
         viewPager.setAdapter(trendingViewPagerAdapter);
-        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());
-        viewPager.setPageMargin(-margin);
+        viewPager.setPageMargin((int) getResources().getDimension(R.dimen.minus_clip_bounds));
         trendingViewPagerAdapter.notifyDataSetChanged();
     }
 
@@ -104,8 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 if (adapter.getCount() == 0) {
                     Toast.makeText(MainActivity.this, "Please search for a gif", Toast.LENGTH_LONG).show();
                 } else {
-                    //todo: create getGif(int position) (singular) method in adapter and use that instead
-                    shareGifLink(adapter.getGifs().get(viewPager.getCurrentItem()));
+                    shareGifLink(adapter.getCurrentGif(viewPager.getCurrentItem()));
                 }
                 break;
         }
@@ -145,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    todo: rename this method to something more appropriate
     private void initSearchValueListener() {
         search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
