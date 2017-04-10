@@ -26,6 +26,7 @@
                 android:orientation="horizontal">
 
                 <!--todo: see if there's an alternative for singleLine: true-->
+                <!--Max lines but does not seem to work-->
                 <EditText
                     android:id="@+id/search"
                     android:hint="@string/search_for_gif"

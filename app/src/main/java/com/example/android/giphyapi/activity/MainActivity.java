@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.giphyapi.R;
-import com.example.android.giphyapi.adapters.TrendingViewPagerAdapter;
 import com.example.android.giphyapi.adapters.ViewPagerAdapter;
 import com.example.android.giphyapi.data.model.GiphyCallback;
 import com.example.android.giphyapi.data.model.GiphySearch;
@@ -84,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initTrendingViewPager() {
-        TrendingViewPagerAdapter trendingViewPagerAdapter = new TrendingViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
+        ViewPagerAdapter trendingViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
         viewPager.setOffscreenPageLimit(5);
         viewPager.setAdapter(trendingViewPagerAdapter);
         int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20*5, getResources().getDisplayMetrics());

@@ -26,13 +26,13 @@ public class GiphySearch implements RefreshDAO {
     public void getGif(String searchString, final GiphyCallback cb) {
         //todo: remove this string builder, use networking.get call properly
         String query = new StringBuilder()
-                //todo: move the base url to a constant
                 .append(BASE_URL)
                 .append("search?q=")
                 //Todo: move the query params to the right methods below
                 .append(searchString)
                 .append("&api_key=")
                 .append(API_KEY).toString();
+        //todo: what happens if the API gives a different, unexpected response, try changing api key
 
         AndroidNetworking.get(query)
                 .setPriority(Priority.LOW)
@@ -42,27 +42,28 @@ public class GiphySearch implements RefreshDAO {
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            //and potentially make this its own private method
-                            //todo: what happens if the API gives a different, unexpected response, try changing api key
-                            JSONArray data = response.getJSONArray("data");
-                            ArrayList<String> gifs = new ArrayList<>();
-                            for (int i = 0; i < data.length(); i++) {
-                                JSONObject images = data.getJSONObject(i).getJSONObject(JSON_OBJ_IMAGES);
-                                JSONObject fixedHeight = images.getJSONObject(JSON_OBJ_FIXED_HEIGHT);
-                                String resultUrl = fixedHeight.getString("url");
-                                gifs.add(resultUrl);
-                            }
-                            cb.success(gifs);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        jsonParsing(response, cb);
                     }
-
                     @Override
                     public void onError(ANError anError) {
                         cb.failure("Failed");
                     }
                 });
+    }
+
+    public void jsonParsing(JSONObject response ,final GiphyCallback cb) {
+        try {
+            JSONArray data = response.getJSONArray("data");
+            ArrayList<String> gifs = new ArrayList<>();
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject images = data.getJSONObject(i).getJSONObject(JSON_OBJ_IMAGES);
+                JSONObject fixedHeight = images.getJSONObject(JSON_OBJ_FIXED_HEIGHT);
+                String resultUrl = fixedHeight.getString("url");
+                gifs.add(resultUrl);
+            }
+            cb.success(gifs);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
