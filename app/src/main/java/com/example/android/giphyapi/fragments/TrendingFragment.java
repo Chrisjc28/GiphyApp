@@ -3,7 +3,6 @@ package com.example.android.giphyapi.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.giphyapi.R;
+import com.example.android.giphyapi.activity.ShareableFragment;
 import com.example.android.giphyapi.adapters.ViewPagerAdapter;
 import com.example.android.giphyapi.data.model.GiphyCallback;
 import com.example.android.giphyapi.data.model.GiphyTrending;
@@ -21,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class TrendingFragment extends Fragment {
+public class TrendingFragment extends ShareableFragment {
 
     private static final int OFF_SCREEN_PAGE_LIMIT = 5;
 
@@ -30,7 +30,6 @@ public class TrendingFragment extends Fragment {
     @BindView(R.id.pager)
     ViewPager viewPager;
 
-    private ViewPagerAdapter ViewPagerAdapter;
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
@@ -67,8 +66,8 @@ public class TrendingFragment extends Fragment {
     }
 
     public void updateViewPager(ArrayList<String> gifs) {
-        ViewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), gifs);
-        viewPager.setAdapter(ViewPagerAdapter);
+        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), gifs);
+        viewPager.setAdapter(viewPagerAdapter);
     }
 
 
@@ -84,7 +83,7 @@ public class TrendingFragment extends Fragment {
             }
         });
     }
-    // TODO: Rename and change types and number of parameters
+
     public static TrendingFragment newInstance() {
         TrendingFragment fragment = new TrendingFragment();
         return fragment;

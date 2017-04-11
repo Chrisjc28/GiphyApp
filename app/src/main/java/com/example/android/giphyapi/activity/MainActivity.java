@@ -1,10 +1,9 @@
 package com.example.android.giphyapi.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.ShareCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -51,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         TrendingFragment.newInstance();
         RecentFragment.newInstance();
         initBottomNavigation();
+
     }
 
     @Override
@@ -62,34 +62,17 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    //TODO: only show the share icon when it applies (aka to the screen your on)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                //TODO: this will now be contextual and wont apply to all screens (fragments). It will share onl giphys when on screens Search and Trending. Use bottomToolbar.getPosition() to tell which screen you are on (and possibly make an enum)
-//                ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-//                if (adapter.getCount() == 0) {
-//                    Toast.makeText(MainActivity.this, "Please search for a gif", Toast.LENGTH_LONG).show();
-//                } else {
-//                    shareGifLink(adapter.getCurrentGif(viewPager.getCurrentItem()));
-//                }
-//                break;
+                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                if (currentFragment instanceof ShareableFragment) {
+                    ((ShareableFragment) currentFragment).shareGif();
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-
-    private void shareGifLink(String currentGif) {
-        ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(MainActivity.this)
-                .setType("text/plain")
-                .setSubject("GIF")
-                .setText(currentGif);
-        Intent intent = builder.getIntent();
-        intent.setAction(Intent.ACTION_SEND);
-        Intent chooser = Intent.createChooser(intent, getString(R.string.Chooser));
-        if (intent.resolveActivity(getPackageManager()) != null)
-            startActivity(chooser);
     }
 
     private void initBottomNavigation() {

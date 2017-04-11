@@ -14,6 +14,13 @@
         android:layout_marginLeft="30dp"
         app:cardCornerRadius="4dp">
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center" />
+
         <ImageView
             android:id="@+id/image1"
             android:layout_width="match_parent"

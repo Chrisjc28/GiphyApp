@@ -15,6 +15,8 @@ import java.util.ArrayList;
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private ArrayList<String> gifs;
 
+
+
     public ViewPagerAdapter( FragmentManager fm, ArrayList<String> gifs) {
         super(fm);
         this.gifs = gifs;

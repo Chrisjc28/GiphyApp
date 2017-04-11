@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.android.giphyapi.R;
+import com.example.android.giphyapi.activity.ShareableFragment;
 import com.example.android.giphyapi.adapters.ViewPagerAdapter;
 import com.example.android.giphyapi.data.model.GiphyCallback;
 import com.example.android.giphyapi.data.model.GiphySearch;
@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
  * Created by ccu17 on 10/04/2017.
  */
 
-public class SearchFragment extends android.support.v4.app.Fragment {
+public class SearchFragment extends ShareableFragment {
 
     private static final int OFF_SCREEN_PAGE_LIMIT = 5;
     private static final String PREF_KEY = "search_key";
@@ -36,16 +36,13 @@ public class SearchFragment extends android.support.v4.app.Fragment {
 
     @BindView(R.id.search)
     EditText search;
-    @BindView(R.id.pager)
-    ViewPager viewPager;
 
-    private ViewPagerAdapter ViewPagerAdapter;
     private SharedPreferences prefs;
-
 
     @Override
     public void onCreate( @Nullable Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
+        getViewPagerAdapter();
     }
 
     @Nullable
@@ -63,19 +60,22 @@ public class SearchFragment extends android.support.v4.app.Fragment {
         initSearchValueListener();
     }
 
-    public void initViewPager() {
-        ViewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), new ArrayList<String>());
-        viewPager.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
-        viewPager.setAdapter(ViewPagerAdapter);
-        viewPager.setPageMargin((int) getResources().getDimension(R.dimen.minus_clip_bounds));
+    public ViewPagerAdapter getViewPagerAdapter() {
+        return viewPagerAdapter;
     }
 
-    public void updateViewPager(ArrayList<String> gifs) {
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), gifs);
+    public void initViewPager() {
+        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), new ArrayList<String>());
+        viewPager.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
         viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setPageMargin((int) getResources().getDimension(R.dimen.minus_clip_bounds));
         viewPagerAdapter.notifyDataSetChanged();
     }
 
+    public void updateViewPager(ArrayList<String> gifs) {
+        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), gifs);
+        viewPager.setAdapter(viewPagerAdapter);
+    }
 
     private void displayingSearchedGifs( String searchString) {
         giphyDAO.getGif(searchString, new GiphyCallback() {
