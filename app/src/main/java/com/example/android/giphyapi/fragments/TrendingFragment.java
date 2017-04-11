@@ -1,109 +1,95 @@
 package com.example.android.giphyapi.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.giphyapi.R;
+import com.example.android.giphyapi.adapters.ViewPagerAdapter;
+import com.example.android.giphyapi.data.model.GiphyCallback;
+import com.example.android.giphyapi.data.model.GiphyTrending;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TrendingFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TrendingFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+
 public class TrendingFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final int OFF_SCREEN_PAGE_LIMIT = 5;
 
-    private OnFragmentInteractionListener mListener;
+    private GiphyTrending giphyTrendingDAO = new GiphyTrending();
 
-    public TrendingFragment() {
-        // Required empty public constructor
-    }
+    @BindView(R.id.pager)
+    ViewPager viewPager;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TrendingFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TrendingFragment newInstance( String param1, String param2 ) {
-        TrendingFragment fragment = new TrendingFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private ViewPagerAdapter ViewPagerAdapter;
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        collectTrendingGifs();
     }
 
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState ) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_trending, container, false);
+        View v = inflater.inflate(R.layout.fragment_trending, container, false);
+        ButterKnife.bind(this, v);
+        return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed( Uri uri ) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initTrendingViewPager();
     }
 
     @Override
     public void onAttach( Context context ) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+
+    public void initTrendingViewPager() {
+        ViewPagerAdapter trendingViewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), new ArrayList<String>());
+        viewPager.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
+        viewPager.setAdapter(trendingViewPagerAdapter);
+        viewPager.setPageMargin((int) getResources().getDimension(R.dimen.minus_clip_bounds));
+        trendingViewPagerAdapter.notifyDataSetChanged();
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction( Uri uri );
+    public void updateViewPager(ArrayList<String> gifs) {
+        ViewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), gifs);
+        viewPager.setAdapter(ViewPagerAdapter);
     }
+
+
+    private void collectTrendingGifs() {
+        giphyTrendingDAO.getTrendingGif(new GiphyCallback() {
+            @Override
+            public void success( ArrayList<String> gifs ) {
+                updateViewPager(gifs);
+            }
+            @Override
+            public void failure( String failed ) {
+                Log.i("CHRIS", "Sorry there was an error displaying the gifs");
+            }
+        });
+    }
+    // TODO: Rename and change types and number of parameters
+    public static TrendingFragment newInstance() {
+        TrendingFragment fragment = new TrendingFragment();
+        return fragment;
+    }
+
+
+
 }

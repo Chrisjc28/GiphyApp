@@ -1,54 +1,41 @@
 package com.example.android.giphyapi.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ShareCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.FrameLayout;
 
 import com.example.android.giphyapi.R;
-import com.example.android.giphyapi.adapters.ViewPagerAdapter;
-import com.example.android.giphyapi.data.model.GiphyCallback;
-import com.example.android.giphyapi.data.model.GiphySearch;
-import com.example.android.giphyapi.data.model.GiphyTrending;
-
-import java.util.ArrayList;
+import com.example.android.giphyapi.fragments.AboutFragment;
+import com.example.android.giphyapi.fragments.RecentFragment;
+import com.example.android.giphyapi.fragments.SearchFragment;
+import com.example.android.giphyapi.fragments.TrendingFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String PREF_KEY = "search_key";
-    private static final int OFF_SCREEN_PAGE_LIMIT = 5;
-
-    private GiphySearch giphyDAO = new GiphySearch();
-    private GiphyTrending giphyTrendingDAO = new GiphyTrending();
+    private SearchFragment searchFragment = new SearchFragment();
+    private AboutFragment aboutFragment = new AboutFragment();
+    private TrendingFragment trendingFragment = new TrendingFragment();
+    private RecentFragment recentFragment = new RecentFragment();
 
     @BindView(R.id.bottom_nav)
     BottomNavigationView bottomNavigationView;
-    @BindView(R.id.search)
-    EditText search;
-    @BindView(R.id.pager)
-    ViewPager viewPager;
     @BindView(R.id.my_toolbar)
     Toolbar giphyOptionsToolbar;
+    @BindView(R.id.fragment_container)
+    FrameLayout fragmentContainer;
 
-    private SharedPreferences prefs;
-    private ViewPagerAdapter viewPagerAdapter;
+    private Menu menuOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,105 +46,39 @@ public class MainActivity extends AppCompatActivity {
         giphyOptionsToolbar.setTitleTextColor(getColor(R.color.white));
         setSupportActionBar(giphyOptionsToolbar);
 
-        initViewPager();
+        AboutFragment.newInstance();
+        SearchFragment.newInstance();
+        TrendingFragment.newInstance();
+        RecentFragment.newInstance();
         initBottomNavigation();
-        initSearchValueListener();
-        prefs = getPreferences(Context.MODE_APPEND);
-    }
-
-    public void initViewPager() {
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
-        viewPager.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
-        viewPager.setAdapter(viewPagerAdapter);
-        viewPager.setPageMargin((int) getResources().getDimension(R.dimen.minus_clip_bounds));
-    }
-
-    public void initTrendingViewPager() {
-        ViewPagerAdapter trendingViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<String>());
-        viewPager.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
-        viewPager.setAdapter(trendingViewPagerAdapter);
-        viewPager.setPageMargin((int) getResources().getDimension(R.dimen.minus_clip_bounds));
-        trendingViewPagerAdapter.notifyDataSetChanged();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        menuOptions = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         menu.findItem(R.id.action_share).getIcon().setTint(getColor(R.color.white));
         return true;
     }
 
+    //TODO: only show the share icon when it applies (aka to the screen your on)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                    ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-                if (adapter.getCount() == 0) {
-                    Toast.makeText(MainActivity.this, "Please search for a gif", Toast.LENGTH_LONG).show();
-                } else {
-                    shareGifLink(adapter.getCurrentGif(viewPager.getCurrentItem()));
-                }
-                break;
+                //TODO: this will now be contextual and wont apply to all screens (fragments). It will share onl giphys when on screens Search and Trending. Use bottomToolbar.getPosition() to tell which screen you are on (and possibly make an enum)
+//                ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+//                if (adapter.getCount() == 0) {
+//                    Toast.makeText(MainActivity.this, "Please search for a gif", Toast.LENGTH_LONG).show();
+//                } else {
+//                    shareGifLink(adapter.getCurrentGif(viewPager.getCurrentItem()));
+//                }
+//                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateViewPager(ArrayList<String> gifs) {
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), gifs);
-        viewPager.setAdapter(viewPagerAdapter);
-        viewPagerAdapter.notifyDataSetChanged();
-    }
-
-    private void displayingSearchedGifs( String searchString) {
-        giphyDAO.getGif(searchString, new GiphyCallback() {
-            @Override
-            public void success( ArrayList<String> gifs ) {
-                Log.i("CHRIS", "success: " + gifs);
-                updateViewPager(gifs);
-            }
-            @Override
-            public void failure( String failed ) {
-                Log.i("CHRIS", "Sorry there was an error displaying the gifs");
-            }
-        });
-    }
-
-    private void collectTrendingGifs() {
-        giphyTrendingDAO.getTrendingGif(new GiphyCallback() {
-            @Override
-            public void success( ArrayList<String> gifs ) {
-                updateViewPager(gifs);
-            }
-            @Override
-            public void failure( String failed ) {
-                Log.i("CHRIS", "Sorry there was an error displaying the gifs");
-            }
-        });
-    }
-
-    private void initSearchValueListener() {
-        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event != null) {
-                    displayingSearchedGifs(search.getText().toString());
-                    saveSearchPref(search.getText().toString());
-                    return true;
-                } else {
-                    Log.i("Chris", "onEditorAction: There was an error setting the listener ");
-                    return false;
-                }
-            }
-        });
-//        search.setText(prefs.getString(PREF_KEY, ""));
-    }
-
-    private void saveSearchPref(String searchPref) {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PREF_KEY, searchPref);
-        editor.apply();
-    }
 
     private void shareGifLink(String currentGif) {
         ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(MainActivity.this)
@@ -173,34 +94,44 @@ public class MainActivity extends AppCompatActivity {
 
     private void initBottomNavigation() {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            int position = 0;
             @Override
             public boolean onNavigationItemSelected( @NonNull MenuItem item ) {
                 switch (item.getItemId()) {
+                    case R.id.action_search:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, searchFragment).commit();
+                        position = 0;
+                        break;
                     case R.id.action_trending:
-                        collectTrendingGifs();
-                        initTrendingViewPager();
-                        item.setChecked(true);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, trendingFragment).commit();
+                        position = 1;
                         break;
                     case R.id.action_recent:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recentFragment).commit();
+                        position = 2;
                         break;
                     case R.id.action_about:
-                        startAboutActivity();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, aboutFragment).commit();
+                        position = 3;
                         break;
+                }
+                MenuItem shareMenuItem = menuOptions.findItem(R.id.action_share);
+                if (position == 2 || position == 3 ) {
+                    shareMenuItem.setVisible(false);
+                } else {
+                    shareMenuItem.setVisible(true);
                 }
                 return true;
             }
         });
     }
 
-    private void startAboutActivity() {
-        Intent About = new Intent(this, AboutActivity.class);
-        startActivity(About);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
     }
+
+
 }
 
 

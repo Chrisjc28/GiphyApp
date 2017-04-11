@@ -1,68 +1,122 @@
 package com.example.android.giphyapi.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
+import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.android.giphyapi.R;
+import com.example.android.giphyapi.adapters.ViewPagerAdapter;
+import com.example.android.giphyapi.data.model.GiphyCallback;
+import com.example.android.giphyapi.data.model.GiphySearch;
 
+import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class SearchFragment extends Fragment {
-    private static final String ARG_URL = "url";
+/**
+ * Created by ccu17 on 10/04/2017.
+ */
 
-    private ImageView gif;
-    private String url;
+public class SearchFragment extends android.support.v4.app.Fragment {
+
+    private static final int OFF_SCREEN_PAGE_LIMIT = 5;
+    private static final String PREF_KEY = "search_key";
+
+    private GiphySearch giphyDAO = new GiphySearch();
+
+    @BindView(R.id.search)
+    EditText search;
+    @BindView(R.id.pager)
+    ViewPager viewPager;
+
+    private ViewPagerAdapter ViewPagerAdapter;
+    private SharedPreferences prefs;
+
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate( @Nullable Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            url = getArguments().getString(ARG_URL);
-        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ) {
+        View v = inflater.inflate(R.layout.fragment_search, container, false);
+        ButterKnife.bind(this, v);
+        return v;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search, container, false);
-        gif = (ImageView) view.findViewById(R.id.image1);
-        CardView giphyCard = (CardView) view.findViewById(R.id.card_view);
-        giphyCard.setCardBackgroundColor(getContext().getColor(R.color.cardViewBackground));
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated( View view, @Nullable Bundle savedInstanceState ) {
         super.onViewCreated(view, savedInstanceState);
-        displayGif();
+        initViewPager();
+        initSearchValueListener();
     }
 
-    private void displayGif() {
-        Glide.with(this)
-                .load(url)
-                .asGif()
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(gif);
+    public void initViewPager() {
+        ViewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), new ArrayList<String>());
+        viewPager.setOffscreenPageLimit(OFF_SCREEN_PAGE_LIMIT);
+        viewPager.setAdapter(ViewPagerAdapter);
+        viewPager.setPageMargin((int) getResources().getDimension(R.dimen.minus_clip_bounds));
     }
 
-    public static SearchFragment newInstance( String url) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_URL, url);
-        fragment.setArguments(args);
-        return fragment;
+    public void updateViewPager(ArrayList<String> gifs) {
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), gifs);
+        viewPager.setAdapter(viewPagerAdapter);
+        viewPagerAdapter.notifyDataSetChanged();
     }
 
+
+    private void displayingSearchedGifs( String searchString) {
+        giphyDAO.getGif(searchString, new GiphyCallback() {
+            @Override
+            public void success( ArrayList<String> gifs ) {
+                Log.i("CHRIS", "success: " + gifs);
+                updateViewPager(gifs);
+            }
+            @Override
+            public void failure( String failed ) {
+                Log.i("CHRIS", "Sorry there was an error displaying the gifs");
+            }
+        });
+    }
+
+    private void saveSearchPref(String searchPref) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PREF_KEY, searchPref);
+        editor.apply();
+    }
+
+    private void initSearchValueListener() {
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event != null) {
+                    displayingSearchedGifs(search.getText().toString());
+                    saveSearchPref(search.getText().toString());
+                    return true;
+                } else {
+                    Log.i("Chris", "onEditorAction: There was an error setting the listener ");
+                    return false;
+                }
+            }
+        });
+        prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        search.setText(prefs.getString(PREF_KEY, ""));
+    }
+
+    public static SearchFragment newInstance() {
+        SearchFragment searchFragment = new SearchFragment();
+        return searchFragment;
+    }
 }

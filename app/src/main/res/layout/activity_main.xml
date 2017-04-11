@@ -13,40 +13,11 @@
         android:theme="@style/AppTheme"
         app:popupTheme="@style/AppTheme"/>
 
-        <LinearLayout
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/search"
-                    android:hint="@string/search_for_gif"
-                    android:imeOptions="actionSearch"
-                    android:drawableStart="@drawable/ic_action_search"
-                    android:drawableLeft="@drawable/ic_action_search"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/edit_text_margin_top"
-                    android:layout_marginLeft="@dimen/edit_text_margin_left"
-                    android:layout_marginRight="@dimen/edit_text_margin_right"/>
-
-            </LinearLayout>
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_nav"
