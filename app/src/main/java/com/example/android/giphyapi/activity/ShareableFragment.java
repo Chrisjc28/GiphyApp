@@ -1,6 +1,7 @@
 package com.example.android.giphyapi.activity;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
@@ -17,6 +18,7 @@ import butterknife.BindView;
 
 public class ShareableFragment extends Fragment {
 
+    @Nullable
     @BindView(R.id.pager)
     protected ViewPager viewPager;
 
