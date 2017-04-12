@@ -20,6 +20,8 @@ public class RecentFragment extends ShareableFragment {
     @BindView(R.id.recent_searches)
     CardView cardView;
 
+    //https://developer.android.com/samples/RecyclerView/src/com.example.android.recyclerview/RecyclerViewFragment.html
+
     public static RecentFragment newInstance() {
         RecentFragment fragment = new RecentFragment();
         return fragment;
