@@ -23,7 +23,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         public ViewHolder(View v) {
             super(v);
             cardView = (CardView) v.findViewById(R.id.recents_card_view);
-            textView = (TextView) v.findViewById(R.id.tv_text);
+            textView = (TextView) v.findViewById(R.id.gif_url);
         }
     }
 
@@ -34,7 +34,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recents_recycler_view, parent, false);
+                .inflate(R.layout.recents_recycler_card_view, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }

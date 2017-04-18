@@ -28,12 +28,13 @@ public class RecentFragment extends ShareableFragment {
     }
 
     @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container,
-                              Bundle savedInstanceState ) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recent, container, false);
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        MyAdapter myAdapter = new MyAdapter(new String[]{"Search no 1","search no 2"," search no 3"});
+        MyAdapter myAdapter = new MyAdapter(new String[]{"Search no 1","search no 2"," search no 3"
+                ,"Search no 4","search no 5"," search no 6"
+                ,"Search no 7","search no 8"," search no 9"});
         recyclerView.setAdapter(myAdapter);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
