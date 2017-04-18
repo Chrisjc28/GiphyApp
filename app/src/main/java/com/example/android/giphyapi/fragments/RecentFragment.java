@@ -2,25 +2,20 @@ package com.example.android.giphyapi.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.giphyapi.R;
 import com.example.android.giphyapi.activity.ShareableFragment;
+import com.example.android.giphyapi.adapters.MyAdapter;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class RecentFragment extends ShareableFragment {
-
-    @BindView(R.id.recent_searches)
-    CardView cardView;
-
-    //https://developer.android.com/samples/RecyclerView/src/com.example.android.recyclerview/RecyclerViewFragment.html
 
     public static RecentFragment newInstance() {
         RecentFragment fragment = new RecentFragment();
@@ -33,17 +28,19 @@ public class RecentFragment extends ShareableFragment {
     }
 
     @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container,
-                              Bundle savedInstanceState ) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recent, container, false);
-        ButterKnife.bind(this, v);
-        cardView.setCardBackgroundColor(getResources().getColor(R.color.colorAccent));
-        return v;
-    }
+        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        MyAdapter myAdapter = new MyAdapter(new String[]{"Search no 1","search no 2"," search no 3"
+                ,"Search no 4","search no 5"," search no 6"
+                ,"Search no 7","search no 8"," search no 9"});
+        recyclerView.setAdapter(myAdapter);
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(llm);
+        ButterKnife.bind(this, v);
+        return v;
     }
 
     @Override
@@ -55,4 +52,11 @@ public class RecentFragment extends ShareableFragment {
     public void onDetach() {
         super.onDetach();
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save currently selected layout manager.
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
 }

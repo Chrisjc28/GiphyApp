@@ -37,12 +37,13 @@ public class SearchFragment extends ShareableFragment {
     @BindView(R.id.search)
     EditText search;
 
-    private SharedPreferences prefs;
+    public SharedPreferences prefs;
 
     @Override
     public void onCreate( @Nullable Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
         getViewPagerAdapter();
+
     }
 
     @Nullable
@@ -119,4 +120,5 @@ public class SearchFragment extends ShareableFragment {
         SearchFragment searchFragment = new SearchFragment();
         return searchFragment;
     }
+
 }
